@@ -1,0 +1,261 @@
+﻿@model Login.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    html, body {
+        overflow-x: hidden !important;
+        background-color: #0b0f19 !important; /* Base dark theme color for the page */
+    }
+
+    /* Full background image layout wrapper with clean dark visibility tint */
+    .homepage-wrapper {
+        background: linear-gradient(rgba(11, 15, 25, 0.75), rgba(11, 15, 25, 0.82)), 
+                    url('/images/bg.jpg') no-repeat center center;
+        background-size: cover;
+        background-attachment: fixed;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding-top: 100px; 
+        min-height: 100vh;
+    }
+
+    /* Dark Premium Frosted Glass Effect Navbar */
+    .backdrop-blur-dark {
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background-color: rgba(15, 23, 42, 0.75) !important;
+    }
+
+    .nav-link-custom {
+        color: #94a3b8 !important;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    .nav-link-custom:hover {
+        color: #38bdf8 !important;
+    }
+
+    /* Left Side Heading Styling */
+    .hero-text-title {
+        color: #ffffff !important;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    /* --- LIGHT THEME CARD INPUT STYLING --- */
+    .form-control-custom {
+        border: 1px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important; /* Dark text inside fields */
+    }
+    .form-control-custom:focus {
+        border-color: #0284c7 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 0.25rem rgba(2, 132, 199, 0.15) !important;
+    }
+    .form-control-custom::placeholder {
+        color: #94a3b8 !important;
+    }
+    
+    /* Radio styling for Light Theme Card */
+    .form-check-input {
+        background-color: #ffffff;
+        border-color: #cbd5e1;
+    }
+    .form-check-input:checked {
+        background-color: #0284c7;
+        border-color: #0284c7;
+    }
+
+    /* Dark Footer Link Formatting */
+    .footer-link-dark {
+        color: #94a3b8;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+    }
+    .footer-link-dark:hover {
+        color: #38bdf8;
+        padding-left: 4px;
+    }
+</style>
+
+<div class="homepage-wrapper">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark position-absolute top-0 start-0 w-100 py-3 backdrop-blur-dark border-bottom border-secondary border-opacity-10" style="z-index: 1050;">
+        <div class="container-fluid px-4 px-md-5">
+            <a class="navbar-brand fw-bold d-flex align-items-center text-white fs-4" asp-controller="Home" asp-action="Index">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-mortarboard-fill me-2 text-info" viewBox="0 0 16 16">
+                    <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.141 3.41a.5.5 0 0 0 0 .894l2.14 1.021a1.5 1.5 0 0 0 .315.118l1.015.241A5.5 5.5 0 0 0 5 10.5a.5.5 0 0 0 1 0 4.5 4.5 0 0 1 9 0 .5.5 0 0 0 1 0 5.5 5.5 0 0 0-5.465-5.49l1.015-.241c.11-.026.213-.065.315-.118l2.14-1.021a.5.5 0 0 0 0-.894l-7.141-3.41z" />
+                    <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z" />
+                </svg>
+                <span class="tracking-wide text-white">Login<span class="text-info">Portal</span></span>
+            </a>
+
+            <button class="navbar-toggler border-0 shadow-none text-white" type="button" data-bs-toggle="collapse" data-bs-target="#portalHeaderNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="portalHeaderNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item"><a class="nav-link nav-link-custom px-3" href="#">Explore Tracks</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom px-3" href="#">Mentorship</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-custom px-3 me-3" href="#">About Us</a></li>
+                    <li class="nav-item mt-2 mt-lg-0"><a class="btn btn-info btn-sm px-4 rounded-pill fw-semibold text-white shadow-sm" asp-controller="Home" asp-action="Login">Sign In</a></li>
+                    <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+                        <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-light btn-sm rounded-pill px-4">Admin Portal</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-auto py-5">
+        <div class="row align-items-center g-5">
+            
+            <div class="col-lg-6 text-center text-lg-start">
+                <h1 class="display-4 hero-text-title mb-4">
+                    A building with four walls and tomorrow inside.
+                </h1>
+                <p class="col-lg-10 fs-5 mx-auto mx-lg-0" style="color: #cbd5e1 !important;">
+                    Register today to gain full access to courses, tracks, and professional mentorship frameworks.
+                </p>
+            </div>
+               
+            <div class="col-md-10 mx-auto col-lg-6">
+                <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5" style="background-color: #ffffff !important;">
+                    <h3 class="fw-bold mb-2 text-center text-dark">Register Now</h3>
+                    <p class="text-center small mb-4" style="color: #64748b !important;">Provide details to create your secure student portal credentials.</p>
+                    
+                    <form asp-controller="Home" asp-action="Register" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label small fw-semibold mb-1" style="color: #475569;"></label>
+                            <input asp-for="FullName" class="form-control form-control-custom py-2" placeholder="John Doe" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label small fw-semibold mb-1" style="color: #475569;"></label>
+                            <input asp-for="Email" class="form-control form-control-custom py-2" placeholder="name@example.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block fw-semibold small mb-2" style="color: #475569;">Gender</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="Gender" value="Male" id="genderMale">
+                                <label class="form-check-label text-dark small" for="genderMale">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="Gender" value="Female" id="genderFemale">
+                                <label class="form-check-label text-dark small" for="genderFemale">Female</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="Gender" value="Other" id="genderOther">
+                                <label class="form-check-label text-dark small" for="genderOther">Other</label>
+                            </div>
+                            <span asp-validation-for="Gender" class="text-danger d-block small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Course" class="form-label fw-semibold small mb-1" style="color: #475569;">Select Course</label>
+                            <select asp-for="Course" class="form-select form-control-custom py-2">
+                                <option value="" disabled selected>-- Choose a Course --</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Business Administration">Business Administration</option>
+                                <option value="Web Development">Web Development</option>
+                            </select>
+                            <span asp-validation-for="Course" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label small fw-semibold mb-1" style="color: #475569;"></label>
+                            <input asp-for="Password" class="form-control form-control-custom py-2" type="password" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label small fw-semibold mb-1" style="color: #475569;"></label>
+                            <input asp-for="ConfirmPassword" class="form-control form-control-custom py-2" type="password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-info text-white w-100 py-2.5 rounded-3 fw-bold shadow-sm mb-3">Create Account</button>
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 d-flex align-items-center" role="alert">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                <div>@TempData["SuccessMessage"]</div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-100 text-secondary pt-5 pb-3 border-top border-secondary border-opacity-10 mt-auto" style="background-color: #0f172a !important;">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 text-center text-md-start">
+                    <h5 class="text-white fw-bold mb-3">Login Portal</h5>
+                    <p class="small pe-lg-4" style="color: #64748b !important;">
+                        A modern learning environment built with four walls and tomorrow inside. Empowering students through guided professional mentorship frameworks.
+                    </p>
+                </div>
+
+                <div class="col-lg-2 col-md-6 text-center text-md-start">
+                    <h6 class="text-white fw-semibold mb-3">Company</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="footer-link-dark">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link-dark">Our Mentors</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link-dark">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 text-center text-md-start">
+                    <h6 class="text-white fw-semibold mb-3">Popular Tracks</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="footer-link-dark">Web Development Bootcamp</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link-dark">Data Science & Analytics</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link-dark">Information Technology</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 text-center text-md-start">
+                    <h6 class="text-white fw-semibold mb-3">Need Help?</h6>
+                    <ul class="list-unstyled small" style="color: #64748b !important;">
+                        <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-info"></i>support@loginportal.com</li>
+                        <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-info"></i>+1 (555) 019-2834</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-secondary border-opacity-10 my-4">
+            
+            <div class="row align-items-center small" style="color: #64748b !important;">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    &copy; 2026 Login Portal. All rights reserved. Built with ASP.NET Core MVC.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-muted text-decoration-none me-3 small">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none small">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

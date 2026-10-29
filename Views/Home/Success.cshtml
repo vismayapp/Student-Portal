@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Registration Successful";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+            <div class="card shadow border-0 rounded-3 p-5 bg-white">
+                <!-- Success Icon -->
+                <div class="mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" fill="currentColor" class="text-success bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                    </svg>
+                </div>
+                
+                <!-- Success Message -->
+                <h1 class="fw-bold text-dark mb-3">Registration Successful!</h1>
+                <p class="fs-5 text-muted mb-4">
+                    Thank you for signing up. Your account has been created successfully, and you can now access all features.
+                </p>
+                
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg px-4 gap-3">Go to Home</a>
+                    <a asp-controller="Home" asp-action="Login" class="btn btn-outline-secondary btn-lg px-4">Log In</a>
+                </div>
+                <style>
+                                    html, body {
+                                        margin: 0;
+                                        padding: 0;
+                                        min-height: 100%;
+                                        width: 100%;
+                                    }
+
+                                    .success-wrapper {
+                                        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/bg.jpg') no-repeat center center fixed;
+                                        background-size: cover;
+                                        min-height: 100vh;
+                                        width: 100%;
+                                        display: flex;
+                                        flex-direction: column;
+                                        justify-content: space-between;
+                                        padding-top: 60px;
+                                    }
+
+                                    .footer-link {
+                                        color: rgba(255, 255, 255, 0.65);
+                                        text-decoration: none;
+                                        transition: all 0.2s ease-in-out;
+                                    }
+
+                                        .footer-link:hover {
+                                            color: #ffffff;
+                                            padding-left: 4px;
+                                        }
+                </style>
+            </div>
+        </div>
+    </div>
+</div>

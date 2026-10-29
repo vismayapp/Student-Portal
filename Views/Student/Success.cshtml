@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "Success";
+}
+
+<div class="container mt-5 text-center">
+    <div class="card p-5 shadow mx-auto" style="max-width: 600px;">
+        <h1 class="text-success display-4">🎉 Success!</h1>
+        <p class="lead mt-3">@TempData["SuccessMessage"]</p>
+        <p class="text-muted">The student account has been recorded into the database successfully.</p>
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-outline-primary">Register Another Student</a>
+        </div>
+    </div>
+</div>

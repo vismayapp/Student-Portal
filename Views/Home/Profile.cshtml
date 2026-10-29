@@ -1,0 +1,472 @@
+﻿@model Login.Models.Student
+
+@{
+    ViewData["Title"] = "Student Profile Dashboard";
+}
+
+<style>
+    :root {
+        --primary-accent: #4f46e5;    
+        --secondary-accent: #06b6d4;  
+        --card-bg: rgba(255, 255, 255, 0.45);
+        --card-border: rgba(255, 255, 255, 0.6);
+        --input-bg: rgba(255, 255, 255, 0.8);
+        --text-main: #1e293b;          
+        --text-muted: #64748b;        
+        --gpay-black: #1f1f1f;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #edf2f7 100%);
+        color: var(--text-main);
+        min-height: 100vh;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        overflow-x: hidden;
+    }
+
+    .bg-glow-1, .bg-glow-2 {
+        position: absolute;
+        width: 450px;
+        height: 450px;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.2;
+        z-index: 0;
+        pointer-events: none;
+    }
+    .bg-glow-1 { top: 15%; left: 10%; background: var(--primary-accent); }
+    .bg-glow-2 { bottom: 15%; right: 10%; background: var(--secondary-accent); }
+
+    .profile-card, .course-card {
+        background: var(--card-bg) !important;
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        border: 1px solid var(--card-border) !important;
+        border-radius: 24px !important;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05) !important;
+        position: relative;
+        z-index: 1;
+    }
+
+    .custom-navbar {
+        background: rgba(255, 255, 255, 0.45) !important;
+        backdrop-filter: blur(16px) saturate(140%);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .nav-link {
+        color: var(--text-muted) !important;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        padding: 0.5rem 1rem !important;
+        border-radius: 10px;
+    }
+
+    .nav-link.active, .nav-link:hover {
+        color: var(--primary-accent) !important;
+        background: rgba(79, 70, 229, 0.06);
+    }
+
+    .form-select, .form-control {
+        background-color: var(--input-bg) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        color: var(--text-main) !important;
+        border-radius: 12px !important;
+        padding: 0.6rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .form-select:focus:not(:disabled), .form-control:focus:not(:disabled) {
+        background-color: #ffffff !important;
+        border-color: var(--primary-accent) !important;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
+    }
+
+    .form-select:disabled, .form-control:disabled {
+        background-color: transparent !important;
+        border-color: transparent !important;
+        color: var(--text-main) !important;
+        padding: 0.6rem 1rem;
+        cursor: default;
+        resize: none;
+    }
+
+    .view-section {
+        display: none;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+
+    .view-section.active-view {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .avatar-wrapper {
+        background: linear-gradient(135deg, var(--primary-accent) 0%, #3730a3 100%);
+        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
+    }
+
+    .detail-row {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        min-height: 58px;
+    }
+    .detail-row:last-child { border-bottom: none; }
+
+    .edit-mode-show { display: none; }
+
+    .btn-gpay {
+        background-color: var(--gpay-black);
+        color: #ffffff;
+        font-weight: 500;
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+</style>
+
+<div class="bg-glow-1"></div>
+<div class="bg-glow-2"></div>
+
+<nav class="navbar navbar-expand-lg navbar-light custom-navbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-dark d-flex align-items-center" asp-controller="Course" asp-action="Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-mortarboard-fill me-2 text-primary" viewBox="0 0 16 16">
+                <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.141 3.41a.5.5 0 0 0 0 .894l2.14 1.021a1.5 1.5 0 0 0 .315.118l1.015.241A5.5 5.5 0 0 0 5 10.5a.5.5 0 0 0 1 0 4.5 4.5 0 0 1 9 0 .5.5 0 0 0 1 0 5.5 5.5 0 0 0-5.465-5.49l1.015-.241c.11-.026.213-.065.315-.118l2.14-1.021a.5.5 0 0 0 0-.894l-7.141-3.41z" />
+            </svg>
+            <span>Edu<span style="color: var(--primary-accent);">Portal</span></span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+                <li class="nav-item">
+                    <a class="nav-link active" id="profile-tab" onclick="changeDashboardTab('profile')">Profile View</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="course-tab" onclick="changeDashboardTab('course')">Course Options</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="/Course/Logout" class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-medium shadow-sm">Sign Out</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mx-auto border-0 shadow-sm rounded-4 mb-4" role="alert" style="max-width: 550px; background: rgba(34, 197, 94, 0.15); color: #15803d;">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mx-auto border-0 shadow-sm rounded-4 mb-4" role="alert" style="max-width: 550px; background: rgba(239, 68, 68, 0.15); color: #b91c1c;">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            
+            <div id="profile-section" class="profile-card p-4 p-sm-5 text-center view-section active-view">
+                
+                <form asp-controller="Course" asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data" class="d-inline-block mx-auto mb-4">
+                    @Html.AntiForgeryToken()
+                    <div class="position-relative mx-auto" style="width: 110px; height: 110px;">
+                        <div class="rounded-circle avatar-wrapper d-flex align-items-center justify-content-center border border-3 border-white shadow" style="width: 110px; height: 110px; overflow: hidden;">
+                            @if (!string.IsNullOrEmpty(Model.ProfilePicture) && Model.ProfilePicture != "default-avatar.png")
+                            {
+                                <img src="/uploads/@Model.ProfilePicture" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <h1 class="mb-0 text-white fw-bold" style="font-size: 2.5rem;">@Model.FullName.Substring(0, 1).ToUpper()</h1>
+                            }
+                        </div>
+                        <label for="profilePicInput" class="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center p-0 shadow" style="width: 34px; height: 34px; cursor: pointer; background-color: var(--primary-accent); border: 2px solid white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-camera-fill text-white" viewBox="0 0 16 16">
+                                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                            </svg>
+                        </label>
+                        <input type="file" id="profilePicInput" name="ProfilePictureFile" accept="image/*" class="d-none" onchange="this.form.submit();" />
+                    </div>
+                </form>
+
+                <form asp-controller="Course" asp-action="Profile" method="post" id="editProfileForm">
+                    @Html.AntiForgeryToken()
+                    
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <input type="hidden" name="Status" value="@Model.Status" />
+                    <input type="hidden" name="Remarks" value="@Model.Remarks" />
+                    <input type="hidden" name="ProfilePicture" value="@Model.ProfilePicture" />
+                    <input type="hidden" id="hiddenEmail" name="Email" value="@Model.Email" />
+                    <input type="hidden" id="hiddenCourse" name="Course" value="@Model.Course" />
+                    <input type="hidden" id="hiddenGender" name="Gender" value="@Model.Gender" />
+
+                    <div class="mb-1 d-flex justify-content-center align-items-center gap-2">
+                        <input type="text" name="FullName" id="inputFullName" class="form-control fw-bold text-center border-0 p-0 fs-2" style="max-width: 80%; background:transparent;" value="@Model.FullName" readonly required />
+                    </div>
+                    <p class="text-secondary small mb-0">Student Profile Dashboard</p>
+
+                    <div class="text-start mt-4 p-4 rounded-4 bg-white bg-opacity-60 border border-white shadow-sm">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="text-secondary small fw-bold text-uppercase">Verification Status</span>
+                            @if (Model.Status == "Approved") { <span class="badge bg-success rounded-pill px-3 py-1.5 fw-semibold">Approved</span> }
+                            else if (Model.Status == "Rejected") { <span class="badge bg-danger rounded-pill px-3 py-1.5 fw-semibold">Rejected</span> }
+                            else { <span class="badge bg-warning text-dark rounded-pill px-3 py-1.5 fw-semibold">Pending Review</span> }
+                        </div>
+                        <div class="p-3 rounded-3 bg-light border border-light-subtle">
+                            <p class="mb-0 text-dark small fw-medium">@(string.IsNullOrWhiteSpace(Model.Remarks) ? "Your application details are currently under baseline evaluation." : Model.Remarks)</p>
+                        </div>
+                    </div>
+
+                    <div class="text-start bg-white bg-opacity-60 p-4 rounded-4 border border-white shadow-sm my-4">
+                        <div class="pb-2 detail-row d-flex justify-content-between align-items-center">
+                            <strong class="text-secondary small">Email Address</strong> 
+                            <input type="email" id="inputEmail" class="form-control text-end fw-medium" style="max-width: 65%;" value="@Model.Email" disabled />
+                        </div>
+                        <div class="py-2 detail-row d-flex justify-content-between align-items-center">
+                            <strong class="text-secondary small">Registered Course</strong> 
+                            <div id="courseBadgeContainer"><span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: rgba(79, 70, 229, 0.1); color: var(--primary-accent);">@Model.Course</span></div>
+                            <select id="inputCourse" class="form-select text-end fw-medium edit-mode-show" style="max-width: 65%;" disabled>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                <option value="Electrical Engineering">Electrical Engineering</option>
+                            </select>
+                        </div>
+                        <div class="pt-2 detail-row d-flex justify-content-between align-items-center">
+                            <strong class="text-secondary small">Gender Classification</strong> 
+                            <span id="genderViewText" class="text-dark fw-medium">@Model.Gender</span>
+                            <select id="inputGender" class="form-select text-end fw-medium edit-mode-show" style="max-width: 50%;" disabled>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" id="btnEditToggle" class="btn btn-primary rounded-pill px-4 shadow-sm" onclick="enableEditMode()">Edit Profile</button>
+                        <button type="submit" id="btnSave" class="btn btn-success rounded-pill px-4 shadow-sm edit-mode-show" onclick="prepareHiddenFields()">Save Changes</button>
+                        <button type="button" id="btnCancel" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm edit-mode-show" onclick="disableEditMode()">Cancel</button>
+                    </div>
+                </form>
+
+                <div class="mt-4 p-4 text-start rounded-4 bg-white bg-opacity-60 border border-white shadow-sm">
+                    <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem;">Verification Documents</h5>
+                    
+                    <form asp-controller="Course" asp-action="UploadStudentDocument" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="studentId" value="@Model.Id" />
+                        <div class="input-group mb-3">
+                            <input type="file" name="StudentDocument" class="form-control" id="docUploadField" accept=".png, .jpg, .jpeg" required />
+                            <button class="btn btn-primary px-4 fw-medium shadow-sm" type="submit" style="background-color: var(--primary-accent);">Upload File</button>
+                        </div>
+                    </form>
+
+                    <h6 class="fw-bold text-dark mb-2 mt-4" style="font-size: 0.95rem;">Your Uploaded Files</h6>
+                    @if (ViewBag.UploadedDocuments != null && ((List<string>)ViewBag.UploadedDocuments).Count > 0)
+                    {
+                        <div class="table-responsive rounded-3 border bg-white shadow-sm">
+                            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+                                <tbody>
+                                    @foreach (var fileName in (List<string>)ViewBag.UploadedDocuments)
+                                    {
+                                        var displayParts = fileName.Split('_');
+                                        var simpleName = displayParts.Length > 2 ? displayParts[2] : fileName;
+                                        <tr>
+                                            <td class="fw-medium text-dark ps-3 text-truncate" style="max-width: 220px;">@simpleName</td>
+                                            <td class="text-end pe-3">
+                                                <div class="d-inline-flex gap-1">
+                                                    <a href="/documents/@fileName" target="_blank" class="btn btn-sm btn-outline-primary py-1 px-3 rounded-pill">View</a>
+                                                    <form asp-controller="Course" asp-action="DeleteStudentDocument" method="post" onsubmit="return confirm('Remove file?');" class="m-0">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="fileName" value="@fileName" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-3 rounded-pill">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center p-3 rounded-3 border border-dashed bg-light text-muted small">No files uploaded yet.</div>
+                    }
+                </div>
+            </div>
+
+            <div id="course-section" class="course-card p-4 p-sm-5 view-section">
+                <h3 class="fw-bold text-center mb-1 text-dark">Available Add-ons</h3>
+                <p class="text-secondary text-center small mb-4">Specialized structural tracks mapped for your branch</p>
+
+                <div class="mb-4 d-flex align-items-center justify-content-between p-3 rounded-3 bg-white bg-opacity-40 border border-white">
+                    <label class="form-label text-secondary small fw-medium mb-0">Primary Registered Branch:</label>
+                    <span class="fw-bold text-dark">@Model.Course</span>
+                </div>
+
+                <div class="mb-3 text-start">
+                    <label for="courseSelect" class="form-label text-secondary small fw-semibold ms-1">Choose Additional Course Track:</label>
+                    <select class="form-select w-100" id="courseSelect" disabled>
+                        <option value="" selected>-- Loading Available Add-ons --</option>
+                    </select>
+                </div>
+
+                <div class="mb-4 text-start">
+                    <label for="institutionSelect" class="form-label text-secondary small fw-semibold ms-1">Select Preferred Institution:</label>
+                    <select class="form-select w-100" id="institutionSelect" disabled>
+                        <option value="">-- Choose an Additional Course First --</option>
+                    </select>
+                </div>
+
+                <div id="paymentOutputWrapper" class="d-none">
+                    <div class="p-4 rounded-4 text-center mb-4" style="background: rgba(6, 182, 212, 0.05); border: 2px dashed rgba(6, 182, 212, 0.2);">
+                        <p class="mb-1 text-secondary text-uppercase fw-semibold" style="font-size: 0.7rem;">Track Tuition Fee</p>
+                        <h1 class="fw-bold mb-0" id="courseFeeLabel" style="color: #0891b2;">₹0</h1>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="payWithGPayBtn" class="btn-gpay w-100 py-2.5 shadow-sm">
+                            <span>Pay with</span>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Pay_Logo.svg" alt="Google Pay" style="height: 22px;">
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeDashboardTab(target) {
+        const pSection = document.getElementById('profile-section');
+        const cSection = document.getElementById('course-section');
+        const pTab = document.getElementById('profile-tab');
+        const cTab = document.getElementById('course-tab');
+
+        pSection.classList.remove('active-view');
+        cSection.classList.remove('active-view');
+        pTab.classList.remove('active');
+        cTab.classList.remove('active');
+
+        if (target === 'profile') {
+            pSection.classList.add('active-view');
+            pTab.classList.add('active');
+        } else if (target === 'course') {
+            cSection.classList.add('active-view');
+            cTab.classList.add('active');
+        }
+    }
+
+    function enableEditMode() {
+        document.getElementById('inputFullName').readOnly = false;
+        document.getElementById('inputEmail').disabled = false;
+        document.getElementById('inputCourse').disabled = false;
+        document.getElementById('inputGender').disabled = false;
+        document.getElementById('inputFullName').style.borderBottom = "2px dashed var(--primary-accent)";
+        document.getElementById('courseBadgeContainer').style.display = "none";
+        document.getElementById('genderViewText').style.display = "none";
+        document.getElementById('btnEditToggle').style.display = "none";
+        document.querySelectorAll('.edit-mode-show').forEach(el => el.style.display = 'block');
+        
+        document.getElementById('inputCourse').value = "@Html.Raw(Model.Course)";
+        document.getElementById('inputGender').value = "@Html.Raw(Model.Gender)";
+    }
+
+    function disableEditMode() {
+        document.getElementById('inputFullName').readOnly = true;
+        document.getElementById('inputEmail').disabled = true;
+        document.getElementById('inputCourse').disabled = true;
+        document.getElementById('inputGender').disabled = true;
+        document.getElementById('inputFullName').style.borderBottom = "none";
+        document.getElementById('courseBadgeContainer').style.display = "block";
+        document.getElementById('genderViewText').style.display = "block";
+        document.getElementById('btnEditToggle').style.display = "block";
+        document.querySelectorAll('.edit-mode-show').forEach(el => el.style.display = 'none');
+    }
+
+    function prepareHiddenFields() {
+        document.getElementById('hiddenEmail').value = document.getElementById('inputEmail').value;
+        document.getElementById('hiddenCourse').value = document.getElementById('inputCourse').value;
+        document.getElementById('hiddenGender').value = document.getElementById('inputGender').value;
+    }
+
+    let serverCourseMap = {};
+    const registrationCourse = "@Html.Raw(Model.Course)";
+    const courseSelect = document.getElementById('courseSelect');
+    const instSelect = document.getElementById('institutionSelect');
+    const paymentOutputWrapper = document.getElementById('paymentOutputWrapper');
+    const feeLabel = document.getElementById('courseFeeLabel');
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch('/Course/GetCoursesData')
+            .then(res => res.json())
+            .then(data => {
+                serverCourseMap = data;
+                populateAvailableCourses();
+            });
+    });
+
+    function populateAvailableCourses() {
+        courseSelect.innerHTML = '<option value="" selected>-- Choose Additional Course --</option>';
+        const matchedAddons = serverCourseMap[registrationCourse];
+        if (matchedAddons) {
+            matchedAddons.forEach(course => {
+                const opt = document.createElement('option');
+                opt.value = course.id;
+                opt.textContent = course.name;
+                opt.setAttribute('data-fee', course.fee);
+                courseSelect.appendChild(opt);
+            });
+            courseSelect.disabled = false;
+        }
+    }
+
+    courseSelect.addEventListener('change', function () {
+        instSelect.innerHTML = '<option value="">-- Choose Institution --</option>';
+        instSelect.disabled = true;
+        paymentOutputWrapper.classList.add('d-none');
+        if (this.value) {
+            const activeCourseObj = serverCourseMap[registrationCourse].find(c => c.id === this.value);
+            if (activeCourseObj) {
+                activeCourseObj.institutions.forEach(inst => {
+                    const opt = document.createElement('option');
+                    opt.value = inst.toLowerCase().replace(/\s+/g, '-');
+                    opt.textContent = inst;
+                    instSelect.appendChild(opt);
+                });
+                instSelect.disabled = false;
+            }
+        }
+    });
+
+    instSelect.addEventListener('change', () => {
+        if (courseSelect.value && instSelect.value) {
+            const fee = courseSelect.options[courseSelect.selectedIndex].getAttribute('data-fee');
+            feeLabel.innerText = "₹" + parseFloat(fee).toLocaleString('en-IN');
+            paymentOutputWrapper.classList.remove('d-none');
+        }
+    });
+
+    document.getElementById('payWithGPayBtn').addEventListener('click', () => {
+        const amt = feeLabel.innerText.replace(/[^\d]/g, '');
+        window.location.href = `/Course/GooglePaySimulator?amount=${amt}&item=${encodeURIComponent(courseSelect.options[courseSelect.selectedIndex].text)}&institution=${encodeURIComponent(instSelect.options[instSelect.selectedIndex].text)}`;
+    });
+</script>

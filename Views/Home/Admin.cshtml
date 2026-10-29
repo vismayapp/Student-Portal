@@ -1,0 +1,363 @@
+﻿@model Login.Controllers.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isAdminLoggedIn = ViewBag.IsLoggedIn ?? false;
+    var currentPage = ViewBag.CurrentPage ?? 1;
+    var totalPages = ViewBag.TotalPages ?? 1;
+    var searchTerm = ViewBag.SearchTerm ?? "";
+    var dateFilter = ViewBag.DateFilter ?? "";
+}
+
+<style>
+    html, body {
+        overflow-x: hidden !important;
+        background-color: #0f172a !important; /* Premium dark slate foundational color */
+    }
+
+    /* --- UNIQUE ADMIN SIGN-IN BACKGROUND (Different from Student Portal) --- */
+    .admin-auth-wrapper {
+        background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.88)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920') no-repeat center center;
+        background-size: cover;
+        background-attachment: fixed;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    /* Aesthetic Crisp Light Card */
+    .admin-card-front {
+        border: none !important;
+        border-radius: 20px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+        background-color: #ffffff !important;
+        width: 100%;
+        max-width: 440px;
+        padding: 3.5rem 2.5rem 3rem 2.5rem !important;
+        position: relative;
+    }
+
+    /* Floating Premium Shield Logo Container */
+    .admin-logo-badge {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Premium Slate Dashboard View UI */
+    .dashboard-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
+    }
+
+    .premium-card {
+        background-color: #ffffff !important;
+        border: none !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03) !important;
+        overflow: hidden;
+    }
+
+    .form-control-dashboard {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 10px !important;
+        padding: 0.65rem 1rem !important;
+        color: #0f172a !important;
+        transition: all 0.2s ease;
+    }
+
+        .form-control-dashboard:focus {
+            border-color: #0f172a !important;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08) !important;
+            background-color: #ffffff !important;
+        }
+
+    .btn-admin-dark {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        padding: 0.75rem 1.5rem !important;
+        transition: all 0.2s ease !important;
+    }
+
+        .btn-admin-dark:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.25) !important;
+        }
+
+    .table-light-header th {
+        background-color: #f8fafc !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        padding: 1.1rem 1rem !important;
+        border-bottom: 2px solid #e2e8f0 !important;
+    }
+</style>
+
+@if (!isAdminLoggedIn)
+{
+    <div class="admin-auth-wrapper">
+        <div class="admin-card-front text-center">
+            
+            <div class="admin-logo-badge text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#38bdf8" class="bi bi-shield-lock" viewBox="0 0 16 16">
+                    <path d="M5.338 1.59a61 61 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.829.502l.142.065c.036.015.066.027.09.034a.2.2 0 0 0 .142 0c.024-.007.054-.019.09-.034l.142-.065c.177-.082.483-.258.829-.502a10.7 10.7 0 0 0 2.287-2.233c1.527-1.998 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7.2 7.2 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.3 7.3 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56" />
+                    <path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415v1.085a.5.5 0 0 1-1 0V7.915A1.5 1.5 0 1 1 9.5 6.5" />
+                </svg>
+            </div>
+            
+            <h3 class="fw-bold text-dark mb-1" style="letter-spacing: -0.03em;">Welcome Back</h3>
+            <p class="text-muted small mb-4">Secure administrator configuration interface access.</p>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger border-0 p-3 small rounded-3 shadow-sm mb-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <form asp-action="Login" asp-controller="Admin" method="post" class="text-start">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary mb-1">Username</label>
+                    <input type="text" name="username" class="form-control form-control-dashboard" required autocomplete="off" placeholder="Enter username..." />
+                </div>
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary mb-1">Password</label>
+                    <input type="password" name="password" class="form-control form-control-dashboard" required placeholder="••••••••" />
+                </div>
+                <button type="submit" class="btn btn-admin-dark w-100 py-2.5 rounded-3 fs-6 mt-1 shadow-sm">Sign In to Dashboard</button>
+            </form>
+            
+            <div class="text-center mt-4 pt-2">
+                <a asp-controller="Home" asp-action="Index" class="text-decoration-none small text-muted hover-text-dark fw-medium">
+                    ← Return to Student Portal
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="dashboard-container">
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-4 mb-5 border-bottom border-secondary border-opacity-10">
+            <div class="d-flex align-items-center mb-3 mb-sm-0">
+                <div class="p-2.5 rounded-3 me-3 d-flex align-items-center justify-content-center shadow-sm text-white" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
+                        <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5v-5A3.5 3.5 0 0 0 10.5 2zM1.5 5.5A4.5 4.5 0 0 1 6 1h4a4.5 4.5 0 0 1 4.5 4.5v4a4.5 4.5 0 0 1-4.5 4.5H6a4.5 4.5 0 0 1-4.5-4.5z" />
+                        <path d="M11.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="h3 fw-bold text-white mb-0" style="letter-spacing: -0.02em;">Admin Control Center</h1>
+                    <p class="text-muted small mb-0">System Registry & Action Approval Manager</p>
+                </div>
+            </div>
+            <div>
+                <a asp-action="Logout" asp-controller="Admin" class="btn btn-outline-light border-opacity-20 text-white fw-semibold px-4 rounded-3 shadow-sm small">
+                    <i class="bi bi-box-arrow-left me-2"></i> Log Out
+                </a>
+            </div>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm p-3 mb-4 rounded-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <strong>Success!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="card premium-card mb-5">
+            <div class="card-header bg-white border-bottom py-3.5 px-4 d-flex align-items-center">
+                <div class="p-1.5 bg-warning bg-opacity-10 rounded text-warning me-2.5">
+                    <i class="bi bi-clock-history fs-5"></i>
+                </div>
+                <h4 class="h5 fw-bold mb-0 text-dark">New Pending Registrations Queue</h4>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.PendingStudents == null || !Model.PendingStudents.Any())
+                {
+                    <div class="text-center py-5 text-muted">
+                        <span class="fs-2 mb-2 d-block">🎉</span>
+                        <p class="fs-6 mb-0 fw-medium">All outstanding student registrations processed successfully!</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover">
+                            <thead class="table-light-header">
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email Address</th>
+                                    <th>Assigned Course</th>
+                                    <th>Registration Date</th>
+                                    <th>Uploaded Document</th>
+                                    <th style="min-width: 320px;">Decision Remarks & Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var student in Model.PendingStudents)
+                                {
+                                    <tr>
+                                        <td class="fw-bold text-dark">@student.Name</td>
+                                        <td>@student.Email</td>
+                                        <td><span class="badge bg-light text-dark border px-2.5 py-1.5 rounded-2">@student.Course</span></td>
+                                        <td class="text-muted small">@student.RegistrationDate</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(student.DocumentPath))
+                                            {
+                                                <a href="@student.DocumentPath" target="_blank" class="btn btn-sm btn-outline-primary px-3 rounded-pill fw-semibold small">
+                                                    View Document
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">No File Provided</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <form method="post" class="d-flex align-items-center gap-2">
+                                                <input type="hidden" name="id" value="@student.Id" />
+                                                <input type="text" name="remarks" class="form-control form-control-dashboard form-control-sm" placeholder="Add optional notes..." autocomplete="off" />
+                                                <div class="d-inline-flex gap-1">
+                                                    <button type="submit" asp-action="ApproveStudent" asp-controller="Admin" class="btn btn-success btn-sm px-3 fw-semibold" onclick="return confirm('Approve entry?');">Approve</button>
+                                                    <button type="submit" asp-action="RejectStudent" asp-controller="Admin" class="btn btn-danger btn-sm px-3 fw-semibold" onclick="return confirm('Reject entry?');">Reject</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card premium-card">
+            <div class="card-header bg-white border-bottom py-3.5 px-4 d-flex align-items-center">
+                <div class="p-1.5 bg-dark bg-opacity-10 rounded text-dark me-2.5">
+                    <i class="bi bi-journal-text fs-5"></i>
+                </div>
+                <h4 class="h5 mb-0 fw-bold text-dark">Processed Student Log History</h4>
+            </div>
+            <div class="card-body p-4">
+                
+                <form method="get" asp-action="Admin" asp-controller="Admin" class="row g-3 align-items-end mb-4 pb-3 border-bottom border-light">
+                    <div class="col-md-5">
+                        <label class="form-label small fw-bold text-secondary mb-1">Search Keywords</label>
+                        <input type="text" name="searchTerm" value="@searchTerm" class="form-control form-control-dashboard" placeholder="Search name or email addresses..." />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-secondary mb-1">Filter Registration Date</label>
+                        <input type="date" name="dateFilter" value="@dateFilter" class="form-control form-control-dashboard" />
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-admin-dark w-100 py-2">Apply Filters</button>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light-header">
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Email Address</th>
+                                <th>Assigned Course</th>
+                                <th>Registration Date</th>
+                                <th>Uploaded Document</th>
+                                <th>Remarks</th>
+                                <th class="text-center" style="width: 140px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ProcessedStudentsLog == null || !Model.ProcessedStudentsLog.Any())
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4 small fw-medium">No historical entries recorded.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var student in Model.ProcessedStudentsLog)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold text-dark">@student.Name</td>
+                                        <td>@student.Email</td>
+                                        <td><span class="badge bg-light text-secondary border px-2 py-1.5 rounded-2">@student.Course</span></td>
+                                        <td class="text-muted small">@student.RegistrationDate</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(student.DocumentPath))
+                                            {
+                                                <a href="@student.DocumentPath" target="_blank" class="btn btn-sm btn-outline-secondary px-2 py-1 small rounded-2">
+                                                    View File
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">—</span>
+                                            }
+                                        </td>
+                                        <td class="text-secondary small">@(string.IsNullOrEmpty(student.Remarks) ? "—" : student.Remarks)</td>
+                                        <td class="text-center">
+                                            @if (student.Status?.ToLower() == "approved")
+                                            {
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-2 w-100 rounded-3 fw-bold">Approved</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-20 px-3 py-2 w-100 rounded-3 fw-bold">Rejected</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (totalPages > 1)
+                {
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center pt-4 mt-3 border-top border-light">
+                        <div class="small text-muted mb-3 mb-sm-0">
+                            Showing page <strong>@currentPage</strong> of <strong>@totalPages</strong>
+                        </div>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0 shadow-sm">
+                                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link px-3" href="@Url.Action("Admin", new { logPage = currentPage - 1, searchTerm, dateFilter })">Previous</a>
+                                </li>
+                                @for (int i = 1; i <= totalPages; i++)
+                                {
+                                    <li class="page-item @(currentPage == i ? "active" : "")">
+                                        <a class="page-link px-3" href="@Url.Action("Admin", new { logPage = i, searchTerm, dateFilter })">@i</a>
+                                    </li>
+                                }
+                                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                                    <a class="page-link px-3" href="@Url.Action("Admin", new { logPage = currentPage + 1, searchTerm, dateFilter })">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
